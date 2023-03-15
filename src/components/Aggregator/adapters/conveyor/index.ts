@@ -5,12 +5,12 @@ import { sendTx } from '../../utils/sendTx';
 
 export const name = 'Conveyor';
 
-const baseUrl = "https://api.conveyor.finance/"
+const baseUrl = 'https://api.conveyor.finance/';
 
-export const native = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE' //Burn address represents native token in the api
+export const native = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'; //Burn address represents native token in the api
 
 export const chainToId = {
-	ethereum: `${baseUrl}ethereum/`,
+	ethereum: `http://127.0.0.1:8080/`,
 	bsc: `${baseUrl}bsc/`,
 	polygon: `${baseUrl}polygon/`,
 	optimism: `${baseUrl}optimism/`,
@@ -31,12 +31,15 @@ const conveyorSwapAggregatorAddress = {
 
 export async function getQuote(chain: string, from: string, to: string, amount: string, extra) {
 	const chainId = chainsMap[chain];
+	
+	let tokenIn = isNativeToken(from) ? native : from;
+	let tokenOut = isNativeToken(to) ? native : to;
 
-	const data = await fetch(chainToId[chain],{ 
+	const data = await fetch(chainToId[chain], {
 		method: 'POST',
 		body: JSON.stringify({
-			token_in: isNativeToken(from) ? native : from,
-			token_out: isNativeToken(to) ? native : to,
+			token_in: tokenIn,
+			token_out: tokenOut,
 			amount_in: BigNumber.from(amount).toHexString(),
 			chain_id: chainId,
 			from_address: extra.userAddress ?? ethers.constants.AddressZero, //Pass the zero address if no address is connected to get a quote back from the saapi
@@ -48,38 +51,48 @@ export async function getQuote(chain: string, from: string, to: string, amount: 
 		}
 	}).then((r) => r.json());
 
-	let gas = !isZero(data.gas_estimate) ? data.gas_estimate : 0; //The api returns a 1.25% margin on the gas estimate from the provider
+
+	let estimatedGas = data.gas_estimate;
+	let value = isNativeToken(from) ? amount : 0;
 	
 	return {
 		amountReturned: data.amount_out,
 		amountIn: amount,
-		estimatedGas: gas,
-		tokenApprovalAddress: conveyorSwapAggregatorAddress[chainId],
+		estimatedGas,
 		rawQuote: {
 			...data,
-			gasLimit: BigNumber.from(gas).toString(),
-			tx: {data: data?.tx_calldata, ...(isNativeToken(from) ? {value: amount} :{}) }
-		}
+			tx: {
+				to: conveyorSwapAggregatorAddress[chainId],
+				data: data.tx_calldata,
+				gasLimit: calculateGasMargin(estimatedGas).toString(),
+				value
+			}
+		},
+		tokenApprovalAddress: conveyorSwapAggregatorAddress[chainId]
 	};
-}
-
-function isZero(value: string): boolean {
-	return BigNumber.from(value).isZero();
 }
 
 function isNativeToken(token: string): boolean {
 	return token === ethers.constants.AddressZero;
 }
 
+function calculateGasMargin(value: string): BigNumber {
+	return BigNumber.from(value).mul(120).div(100);
+}
+
 export async function swap({ signer, rawQuote, chain }) {
+	const fromAddress = await signer.getAddress();
 	const tx = await sendTx(signer, chain, {
-		...rawQuote.tx
+		from: fromAddress,
+		to: rawQuote.tx.to,
+		data: rawQuote.tx.data,
+		value: rawQuote.tx.value,
+		gasLimit: rawQuote.tx.gasLimit
 	});
 
 	return tx;
 }
 
 export const getTxData = ({ rawQuote }) => rawQuote?.tx?.data;
-
 
 export const getTx = ({ rawQuote }) => rawQuote.tx;
