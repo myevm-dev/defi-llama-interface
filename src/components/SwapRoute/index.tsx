@@ -5,8 +5,6 @@ import { Flex, Text } from '@chakra-ui/react';
 import { AlertCircle, Gift, Unlock } from 'react-feather';
 import { GasIcon } from '../Icons';
 import { formattedNum } from '~/utils';
-import { WarningIcon } from '@chakra-ui/icons';
-import BigNumber from 'bignumber.js';
 
 interface IToken {
 	address: string;
@@ -41,8 +39,7 @@ interface IRoute {
 	txData: string;
 	netOut: number;
 	isFetchingGasPrice: boolean;
-	isOutputAvailable: boolean;
-	amountOut: string;
+	toTokenPrice: number;
 }
 
 const Route = ({
@@ -59,8 +56,7 @@ const Route = ({
 	lossPercent,
 	netOut,
 	isFetchingGasPrice,
-	isOutputAvailable,
-	amountOut
+	toTokenPrice
 }: IRoute) => {
 	const { isApproved } = useTokenApprove(fromToken?.address, price?.tokenApprovalAddress as `0x${string}`, amountFrom);
 
@@ -69,16 +65,11 @@ const Route = ({
 	const amount = +price.amountReturned / 10 ** +toToken?.decimals;
 
 	const afterFees =
-		netOut && Number.isFinite(Number(netOut)) ? `$${formattedNum(netOut.toFixed(1), false, true)}` : null;
+		toTokenPrice && Number.isFinite(Number(toTokenPrice)) && netOut && Number.isFinite(Number(netOut))
+			? `$${formattedNum(netOut.toFixed(1), false, true)}`
+			: null;
 	const isGasNotKnown = gasUsd === 'Unknown' || Number.isNaN(Number(gasUsd));
 	const txGas = isGasNotKnown ? '' : '$' + formattedNum(gasUsd);
-
-	const isSimulatedOutput = !isOutputAvailable && amountOut !== '0';
-
-	const inputAmount =
-		isOutputAvailable && amountOut !== '0' && fromToken?.decimals && amountFrom && amountFrom !== '0'
-			? Number(new BigNumber(amountFrom).div(10 ** fromToken.decimals).toFixed(4))
-			: null;
 
 	return (
 		<RouteWrapper
@@ -88,32 +79,14 @@ const Route = ({
 			best={index === 0}
 		>
 			<RouteRow>
-				{inputAmount ? (
-					<Flex alignItems="baseline">
-						<Text fontSize={19} fontWeight={700} color={'#FAFAFA'}>
-							{formattedNum(inputAmount)}{' '}
-						</Text>
-						<Text fontSize={19} fontWeight={600} marginLeft={'4px'} color={'#ccc'}>
-							{fromToken?.symbol}{' '}
-						</Text>
-					</Flex>
-				) : (
-					<Flex alignItems="baseline">
-						<Text fontSize={19} fontWeight={700} color={'#FAFAFA'}>
-							{formattedNum(amount)}{' '}
-						</Text>
-						<Text fontSize={19} fontWeight={600} marginLeft={'4px'} color={'#ccc'}>
-							{toToken?.symbol}{' '}
-						</Text>
-						{isSimulatedOutput ? (
-							<Tooltip
-								content={`The value of this route is estimated because ${name} doesn't support setting amount received.`}
-							>
-								<WarningIcon mb={'4px'} ml={'4px'} color="orange.300" />
-							</Tooltip>
-						) : null}
-					</Flex>
-				)}
+				<Flex alignItems="baseline">
+					<Text fontSize={19} fontWeight={700} color={'#FAFAFA'}>
+						{formattedNum(amount)}{' '}
+					</Text>
+					<Text fontSize={19} fontWeight={600} marginLeft={'4px'} color={'#ccc'}>
+						{toToken?.symbol}
+					</Text>
+				</Flex>
 				<Text fontWeight={500} fontSize={16} color={'#FAFAFA'}>
 					<Flex as="span" alignItems="center" gap="8px">
 						{index === 0 ? (
@@ -130,22 +103,16 @@ const Route = ({
 			</RouteRow>
 
 			<RouteRow>
-				{inputAmount ? (
-					<Flex className="mobile-column" as="span" columnGap="4px" display="flex" color="gray.400" fontWeight={500}>
-						Input Amount
-					</Flex>
-				) : (
-					<Flex className="mobile-column" as="span" columnGap="4px" display="flex" color="gray.400" fontWeight={500}>
-						<span>{`≈ ${afterFees} `}</span>
-						{isGasNotKnown && !isFetchingGasPrice ? (
-							<Flex as="span" gap="4px" alignItems="center" color="#d97706" className="inline-alert">
-								<AlertCircle size="14" /> unknown gas fees
-							</Flex>
-						) : (
-							<span>after fees</span>
-						)}
-					</Flex>
-				)}
+				<Flex className="mobile-column" as="span" columnGap="4px" display="flex" color="gray.400" fontWeight={500}>
+					{afterFees ? <span>{`≈ ${afterFees} `}</span> : null}
+					{isGasNotKnown && !isFetchingGasPrice ? (
+						<Flex as="span" gap="4px" alignItems="center" color="#d97706" className="inline-alert">
+							<AlertCircle size="14" /> unknown gas fees
+						</Flex>
+					) : afterFees ? (
+						<span>after fees</span>
+					) : null}
+				</Flex>
 
 				{airdrop ? (
 					<Tooltip content="This project has no token and might airdrop one in the future">
