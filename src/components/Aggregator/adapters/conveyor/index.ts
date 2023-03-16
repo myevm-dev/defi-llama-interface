@@ -10,7 +10,7 @@ const baseUrl = 'https://api.conveyor.finance/';
 export const native = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'; //Burn address represents native token in the api
 
 export const chainToId = {
-	ethereum: `http://127.0.0.1:8080/`,
+	ethereum: `${baseUrl}/ethereum/`,
 	bsc: `${baseUrl}bsc/`,
 	polygon: `${baseUrl}polygon/`,
 	optimism: `${baseUrl}optimism/`,
