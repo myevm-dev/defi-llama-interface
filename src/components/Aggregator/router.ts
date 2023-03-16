@@ -23,10 +23,28 @@ import { capitalizeFirstLetter } from '~/utils';
 
 // import * as krystal from './adapters/krystal'
 
+export const adapters = [
+	matcha,
+	inch,
+	cowswap,
+	openocean,
+	yieldyak,
+	paraswap,
+	firebird,
+	hashflow,
+	llamazip,
+	kyberswap,
+	conveyor
+];
 
-export const adapters = [matcha, inch, cowswap, openocean, yieldyak, paraswap, firebird, hashflow, llamazip, kyberswap, conveyor];
-
-export const inifiniteApprovalAllowed = [matcha.name, inch.name, cowswap.name, kyberswap.name, paraswap.name, conveyor.name];
+export const inifiniteApprovalAllowed = [
+	matcha.name,
+	inch.name,
+	cowswap.name,
+	kyberswap.name,
+	paraswap.name,
+	conveyor.name
+];
 
 export const adaptersWithApiKeys = {
 	[matcha.name]: true,

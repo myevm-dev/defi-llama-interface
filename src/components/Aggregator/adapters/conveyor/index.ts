@@ -31,7 +31,7 @@ const conveyorSwapAggregatorAddress = {
 
 export async function getQuote(chain: string, from: string, to: string, amount: string, extra) {
 	const chainId = chainsMap[chain];
-	
+
 	let tokenIn = isNativeToken(from) ? native : from;
 	let tokenOut = isNativeToken(to) ? native : to;
 
@@ -51,10 +51,9 @@ export async function getQuote(chain: string, from: string, to: string, amount: 
 		}
 	}).then((r) => r.json());
 
-
 	let estimatedGas = data.gas_estimate;
 	let value = isNativeToken(from) ? amount : 0;
-	
+
 	return {
 		amountReturned: data.amount_out,
 		amountIn: amount,
@@ -83,8 +82,8 @@ function calculateGasMargin(value: string): BigNumber {
 export async function swap({ signer, rawQuote, chain }) {
 	const fromAddress = await signer.getAddress();
 	const tx = await sendTx(signer, chain, {
-		from: fromAddress,
 		to: rawQuote.tx.to,
+		from: fromAddress,
 		data: rawQuote.tx.data,
 		value: rawQuote.tx.value,
 		gasLimit: rawQuote.tx.gasLimit
@@ -93,6 +92,6 @@ export async function swap({ signer, rawQuote, chain }) {
 	return tx;
 }
 
-export const getTxData = ({ rawQuote }) => rawQuote?.tx?.data;
+export const getTxData = ({ rawQuote }) => rawQuote?.tx.data;
 
 export const getTx = ({ rawQuote }) => rawQuote.tx;

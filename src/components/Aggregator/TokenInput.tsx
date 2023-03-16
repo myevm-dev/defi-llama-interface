@@ -96,11 +96,7 @@ export const TokenInput = ({ setAmount, amount, onMaxClick, ...props }) => {
 				placeholder="Token amount"
 				type="text"
 				onChange={(val) => {
-					setAmount(val.target.value
-						.replace(/[^0-9.,]/g, '')
-						.replace(/,/g, '.')
-						);
-						
+					setAmount(val.target.value.replace(/[^0-9.,]/g, '').replace(/,/g, '.'));
 				}}
 				value={amount}
 				{...props}
