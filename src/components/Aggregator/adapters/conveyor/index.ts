@@ -4,8 +4,6 @@ import { chainsMap } from '../../constants';
 import { sendTx } from '../../utils/sendTx';
 
 export const name = 'Conveyor';
-const baseUrl = 'https://api.conveyor.finance/';
-
 export const native = '0xEeeeeEeeeEeEeeEeEeEeeEEEeeeeEeeeeeeeEEeE'; //Burn address represents native token in the api
 
 export const chainToId = {
@@ -43,7 +41,7 @@ export async function getQuote(chain: string, from: string, to: string, amount: 
 			token_out: tokenOut,
 			amount_in: BigNumber.from(amount).toHexString(),
 			chain_id: chainId,
-			from_address: extra.userAddress ?? ethers.constants.AddressZero, //Pass the zero address if no address is connected to get a quote back from the saapi
+			from_address: extra.userAddress,
 			allowed_slippage: Number(extra.slippage) * 100 //Saapi expects slippage in Bips
 		}),
 
@@ -52,10 +50,8 @@ export async function getQuote(chain: string, from: string, to: string, amount: 
 		}
 	}).then((r) => r.json());
 
-	let estimatedGas = data.gas_estimate;
-	let value = isNativeToken(from) ? amount : 0;
-
-
+	let estimatedGas = BigNumber.from(data.gas_estimate).toHexString();
+	let value = isNativeToken(from) ? amount : undefined;
 
 	return {
 		amountReturned: data.amount_out,
@@ -66,7 +62,7 @@ export async function getQuote(chain: string, from: string, to: string, amount: 
 			tx: {
 				to: router,
 				data: data.tx_calldata,
-				gasLimit: calculateGasMargin(estimatedGas).toString(),
+				gasLimit: estimatedGas,
 				value
 			}
 		},
@@ -76,10 +72,6 @@ export async function getQuote(chain: string, from: string, to: string, amount: 
 
 function isNativeToken(token: string): boolean {
 	return token === ethers.constants.AddressZero;
-}
-
-function calculateGasMargin(value: string): BigNumber {
-	return BigNumber.from(value).mul(120).div(100);
 }
 
 export async function swap({ signer, rawQuote, chain }) {
