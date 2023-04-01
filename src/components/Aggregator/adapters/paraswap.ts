@@ -1,10 +1,10 @@
 // Source: https://developers.paraswap.network/api/master
 
 import BigNumber from 'bignumber.js';
-import { ethers } from 'ethers';
 import { applyArbitrumFees } from '../utils/arbitrumFees';
-import { sendTx } from '../utils/sendTx';
 import { defillamaReferrerAddress } from '../constants';
+import { ethers } from 'ethers';
+import { sendTx } from '../utils/sendTx';
 
 // api docs have an outdated chain list, need to check https://app.paraswap.io/# to find supported networks
 export const chainToId = {

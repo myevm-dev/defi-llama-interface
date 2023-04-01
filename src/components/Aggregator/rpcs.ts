@@ -219,7 +219,7 @@ export const rpcUrls = {
 	},
 	7700: {
 		default: 'https://canto.slingshot.finance',
-		neobase: 'https://canto.neobase.one',
+		neobase: 'https://canto.neobase.one'
 	}
 };
 
