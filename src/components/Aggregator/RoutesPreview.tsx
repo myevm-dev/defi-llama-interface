@@ -45,7 +45,7 @@ const Header = styled.div`
 `;
 
 const CheckBody = styled.div`
-	color: rgb(112, 160, 247);
+	color: #ff3833;
 	display: flex;
 	justify-content: space-around;
 	margin-top: 16px;

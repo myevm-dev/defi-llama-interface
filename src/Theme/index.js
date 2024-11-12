@@ -33,13 +33,13 @@ const theme = (darkMode) => ({
 	divider: darkMode ? 'rgba(43, 43, 43, 0.435)' : 'rgba(43, 43, 43, 0.035)',
 
 	//primary colors
-	primary1: darkMode ? '#2172E5' : '#445ed0',
+	primary1: darkMode ? '#ff3833' : '#FF6871',
 
 	// other
 	red1: '#FF6871',
 	green1: '#27AE60',
-	link: '#2172E5',
-	blue: '#2f80ed',
+	link: '#ff3833',
+	blue: '#ff3833',
 
 	//shadow
 	shadowSm: '0 1px 2px 0 rgb(0 0 0 / 0.05)',

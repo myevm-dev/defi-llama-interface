@@ -321,7 +321,7 @@ const LlamaIcon = (
 					fillRule="evenodd"
 					clipRule="evenodd"
 					d="M26.17 50.153a.687.687 0 0 1 .193-.9l2.545-1.834a1.006 1.006 0 0 1 1.405.227c.02.027.038.058.055.085A1.004 1.004 0 0 1 30 49.105l-.093.048-2.86 1.288a.687.687 0 0 1-.876-.285"
-					fill="#196CE4"
+					fill="#ff3833"
 				/>
 			</g>
 			<g filter="url(#e)">
@@ -437,7 +437,7 @@ const LlamaIcon = (
 		<defs>
 			<linearGradient id="a" x1={14.194} y1={2.523} x2={37.527} y2={70.991} gradientUnits="userSpaceOnUse">
 				<stop stopColor="#61A2FD" />
-				<stop offset={1} stopColor="#0062EE" />
+				<stop offset={1} stopColor="#ff3833" />
 			</linearGradient>
 			<linearGradient id="b" x1={40.5} y1={0} x2={40.5} y2={80} gradientUnits="userSpaceOnUse">
 				<stop stopColor="#fff" />
@@ -448,11 +448,11 @@ const LlamaIcon = (
 				<stop offset={1} stopColor="#81B5FF" />
 			</linearGradient>
 			<linearGradient id="j" x1={38.836} y1={12.727} x2={22.097} y2={55.848} gradientUnits="userSpaceOnUse">
-				<stop offset={0.29} stopColor="#0062EE" />
+				<stop offset={0.29} stopColor="#ff3833" />
 				<stop offset={1} stopColor="#00398A" />
 			</linearGradient>
 			<linearGradient id="l" x1={47.315} y1={62.235} x2={52.985} y2={29.829} gradientUnits="userSpaceOnUse">
-				<stop offset={0.29} stopColor="#0062EE" />
+				<stop offset={0.29} stopColor="#ff3833" />
 				<stop offset={1} stopColor="#00398A" />
 			</linearGradient>
 			<linearGradient id="m" x1={40.557} y1={73.191} x2={40.557} y2={43.096} gradientUnits="userSpaceOnUse">
