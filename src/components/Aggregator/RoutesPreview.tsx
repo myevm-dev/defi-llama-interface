@@ -82,7 +82,7 @@ const RoutesPreview = () => {
 				</CheckBody>
 
 				<Text color={'gray.300'} textAlign="center" mt={6}>
-					LlamaSwap looks for the best route for your trade <br /> among a variety of Dex Aggregators, guaranteeing you{' '}
+					MyEVM uses LlamaSwap to look for the best route for your trade <br /> among a variety of Dex Aggregators, guaranteeing you{' '}
 					<br /> the best execution prices in DeFi.
 					<br /> <br /> Try it now or{' '}
 					<Link href="https://twitter.com/defillama/status/1609989799653285888" isExternal textDecoration={'underline'}>

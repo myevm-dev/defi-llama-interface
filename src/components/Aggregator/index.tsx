@@ -930,7 +930,7 @@ export function AggregatorContainer({ tokenlist }) {
 							left="0"
 							m="auto"
 							borderRadius="8px"
-							bg="#222429"
+							bg="#000"
 							_hover={{ bg: '#2d3037' }}
 							color="white"
 							zIndex={1}

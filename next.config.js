@@ -1,38 +1,40 @@
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
 	enabled: process.env.ANALYZE === 'true'
-});
-
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+  });
+  
+  /** @type {import('next').NextConfig} */
+  const nextConfig = {
 	reactStrictMode: true,
 	images: {
-		domains: ['icons.llama.fi', 'assets.coingecko.com', 'icons.llamao.fi']
+	  domains: ['icons.llama.fi', 'assets.coingecko.com', 'icons.llamao.fi']
 	},
 	compiler: {
-		styledComponents: true
+	  styledComponents: true
 	},
 	async headers() {
-		return [
+	  return [
+		{
+		  source: '/:path*',
+		  headers: [
 			{
-				source: '/:path*',
-				headers: [
-					{
-						key: 'Access-Control-Allow-Origin',
-						value: '*'
-					},
-					{
-						key: 'Access-Control-Allow-Methods',
-						value: 'GET'
-					},
-					{
-						key: 'Access-Control-Allow-Headers',
-						value: 'X-Requested-With, content-type, Authorization'
-					}
-				]
+			  key: 'Access-Control-Allow-Origin',
+			  value: '*'
+			},
+			{
+			  key: 'Access-Control-Allow-Methods',
+			  value: 'GET'
+			},
+			{
+			  key: 'Access-Control-Allow-Headers',
+			  value: 'X-Requested-With, content-type, Authorization'
 			}
-		];
+		  ]
+		}
+	  ];
 	},
+	staticPageGenerationTimeout: 300, // Increase this value as needed (e.g., 300 seconds)
 	experimental: {}
-};
-
-module.exports = withBundleAnalyzer(nextConfig);
+  };
+  
+  module.exports = withBundleAnalyzer(nextConfig);
+  
